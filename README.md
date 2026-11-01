@@ -98,24 +98,8 @@ print("Deformed Nodes:\n", np.array(nodes_new))
 The function is designed to be seamlessly called from Mathematica. You can use `ExternalEvaluate` to run the Python script and pass Mathematica lists directly:
 
 ```mathematica
-(* Start a Python session *)
-session = StartExternalSession["Python"];
-
-(* Define the inputs *)
-nodes = {{0., 0.}, {1., 0.}, {1., 1.}, {0., 1.}, {0.5, 0.}, {1., 0.5}, {0.5, 1.}, {0., 0.5}, {0.5, 0.5}};
-elements = {{1, 2, 3, 4, 5, 6, 7, 8, 9}}; (* Note: 1-based indexing in Mathematica *)
-outerOld = {{0., 0.}, {1., 0.}, {1., 1.}, {0., 1.}};
-outerNew = {{0.25, 0.25}, {0.75, 0.25}, {0.75, 0.75}, {0.25, 0.75}};
-
-(* Evaluate *)
-result = ExternalEvaluate[session, {
-   "from CrossSectionMesh import deform_mesh_auto",
-   "import numpy as np",
-   "res = deform_mesh_auto(np.array(" <> ToString[nodes] <> "), np.array(" <> ToString[elements] <> "), np.array(" <> ToString[outerOld] <> "), np.array(" <> ToString[outerNew] <> "))",
-   "res"
-}];
-
-DeleteObject[session];
+session = StartExternalSession[<|"System" -> "Python", "Version" -> "3", "ReturnType" -> "Expression"|>];
+deformMeshAuto = ExternalEvaluate[session, File["CrossSectionMesh.py"]];
 ```
 
 ---
